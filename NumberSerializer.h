@@ -1,20 +1,31 @@
-#pragma once
+﻿#pragma once
 #include <cstdint>
 #include <vector>
-#include <stdexcept>
-#include <cstring>
+#include <string>
+
+using byte = uint8_t;
+enum class DataType : uint8_t
+{
+	Null		= 0x00,
+	Bool		= 0x01,
+	Int			= 0x02,
+	Float		= 0x03,
+
+	Char		= 0x04,
+	String		= 0x05,
+
+	Array		= 0x10,
+	List		= 0x11,
+	Dictionary	= 0x12
+};
 
 namespace NumberSerializer
 {
-	using byte = uint8_t;
-
-	enum class DataType : uint8_t
-	{
-		Null  = 0x00,
-		Bool  = 0x01,
-		Int	  = 0x02,
-		Float = 0x03
-	};
+	void SaveToFile(const std::vector<byte>& data, const std::string& filename, bool compress = true);
+	std::vector<byte> LoadFromFile(const std::string& filename);
+	uint32_t crc32(const uint8_t* data, size_t length);
+	std::vector<byte> compressData(const std::vector<byte>& input); 
+	std::vector<byte> decompressData(const std::vector<byte>& input, size_t expectedSize);	
 
 	class ByteWriter
 	{
