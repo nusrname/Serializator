@@ -1,5 +1,7 @@
 ﻿#include <iostream>
 #include "NumberSerializer.h"
+#include "StringSerializer.h"
+#include "CollectionSerializer.h"
 using namespace NumberSerializer;
 
 int main()
