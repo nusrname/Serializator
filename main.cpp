@@ -21,5 +21,7 @@ int main()
 	float b = FloatSerializer::deserialize(reader);
 	bool c = BoolSerializer::deserialize(reader);
 
+	std::cout << a << " " << b << " " << c;
+
 	return 0;
 }

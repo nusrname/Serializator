@@ -129,9 +129,11 @@
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="NumberSerializer.cpp" />
+    <ClCompile Include="StringSerializer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="NumberSerializer.h" />
+    <ClInclude Include="StringSerializer.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

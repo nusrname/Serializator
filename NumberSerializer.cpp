@@ -163,6 +163,9 @@ namespace NumberSerializer
 
 #pragma endregion
 
+#pragma region Functions
+
+
 	uint32_t crc32(const uint8_t* data, size_t length)
 	{
 		static uint32_t table[256];
@@ -375,4 +378,6 @@ namespace NumberSerializer
 
 		return data;
 	}
+
+#pragma endregion
 }
