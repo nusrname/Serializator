@@ -2,10 +2,8 @@
 #include <unordered_map>
 #include "NumberSerializer.h"
 
-namespace CollectionSerializer
+namespace Serializer
 {
-	using namespace NumberSerializer;
-
 	template<typename T>
 	using SerializeFunc = void(*)(ByteWriter&, const T&);
 
@@ -44,12 +42,12 @@ namespace CollectionSerializer
 		template<typename K, typename V>
 		static void serialize(ByteWriter& writer,
 			const std::unordered_map<K, V>& dict,
-			SerializeFunc<K> keySerializer,
-			SerializeFunc<V> valueSerializer);
+			void(*keySerializer)(ByteWriter&, const K&),
+			void(*valueSerializer)(ByteWriter&, const V&));
 
 		template<typename K, typename V>
 		static std::unordered_map<K, V> deserialize(ByteReader& reader,
-			DeserializeFunc<K> keyDeserializer,
-			DeserializeFunc<V> valueDeserializer);
+			V(*keyDeserializer)(ByteReader&),
+			V(*valueDeserializer)(ByteReader&));
 	};
 }

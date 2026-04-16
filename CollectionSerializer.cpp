@@ -1,115 +1,108 @@
 ﻿#pragma once
-#include <unordered_map>
 #include "CollectionSerializer.h"
-#include "NumberSerializer.h"
-#include <vector>
+#include <stdexcept>
 
-namespace CollectionSerializer
+namespace Serializer
 {
-	using namespace NumberSerializer;
-
 	template<typename T>
-	void ArraySerializer::serialize(ByteWriter& writer,
+	inline void ArraySerializer::serialize(ByteWriter& writer,
 		const std::vector<T>& data,
 		SerializeFunc<T> serializer)
 	{
 		writer.writeByte(static_cast<byte>(DataType::Array));
 
-		uint32_t size = static_cast<uint32_t>(data.size());
-		writer.writeInt(size);
+		writer.writeInt(static_cast<int32_t>(data.size()));
 
 		for (const auto& item : data)
 			serializer(writer, item);
 	}
 
 	template<typename T>
-	std::vector<T> ArraySerializer::deserialize(ByteReader& reader,
+	inline std::vector<T> ArraySerializer::deserialize(ByteReader& reader,
 		DeserializeFunc<T> deserializer)
 	{
 		auto type = static_cast<DataType>(reader.readByte());
 
 		if (type != DataType::Array)
-			throw std::runtime_error("Type mismatch: expected Array");
+			throw std::runtime_error("Type mismatch: Array");
 
-		uint32_t size = static_cast<uint32_t>(reader.readInt());
+		int32_t size = reader.readInt();
 
 		std::vector<T> result;
 		result.reserve(size);
 
-		for (uint32_t i = 0; i < size; i++)
+		for (int i = 0; i < size; i++)
 			result.push_back(deserializer(reader));
 
 		return result;
 	}
 
 	template<typename T>
-	void ListSerializer::serialize(ByteWriter& writer,
+	inline void ListSerializer::serialize(ByteWriter& writer,
 		const std::vector<T>& data,
 		SerializeFunc<T> serializer)
 	{
 		writer.writeByte(static_cast<byte>(DataType::List));
 
-		uint32_t size = static_cast<uint32_t>(data.size());
-		writer.writeInt(size);
+		writer.writeInt(static_cast<int32_t>(data.size()));
 
 		for (const auto& item : data)
 			serializer(writer, item);
 	}
 
 	template<typename T>
-	std::vector<T> ListSerializer::deserialize(ByteReader& reader,
+	inline std::vector<T> ListSerializer::deserialize(ByteReader& reader,
 		DeserializeFunc<T> deserializer)
 	{
 		auto type = static_cast<DataType>(reader.readByte());
 
 		if (type != DataType::List)
-			throw std::runtime_error("Type mismatch: expected List");
+			throw std::runtime_error("Type mismatch: List");
 
-		uint32_t size = static_cast<uint32_t>(reader.readInt());
+		int32_t size = reader.readInt();
 
 		std::vector<T> result;
 		result.reserve(size);
 
-		for (uint32_t i = 0; i < size; i++)
+		for (int i = 0; i < size; i++)
 			result.push_back(deserializer(reader));
 
 		return result;
 	}
 
 	template<typename K, typename V>
-	void DictionarySerializer::serialize(ByteWriter& writer,
+	inline void DictionarySerializer::serialize(ByteWriter& writer,
 		const std::unordered_map<K, V>& dict,
-		SerializeFunc<K> keySerializer,
-		SerializeFunc<V> valueSerializer)
+		void(*keySerializer)(ByteWriter&, const K&),
+		void(*valueSerializer)(ByteWriter&, const V&))
 	{
 		writer.writeByte(static_cast<byte>(DataType::Dictionary));
 
-		uint32_t size = static_cast<uint32_t>(dict.size());
-		writer.writeInt(size);
+		writer.writeInt(static_cast<int32_t>(dict.size()));
 
-		for (const auto& pair : dict)
+		for (const auto& [k, v] : dict)
 		{
-			keySerializer(writer, pair.first);
-			valueSerializer(writer, pair.second);
+			keySerializer(writer, k);
+			valueSerializer(writer, v);
 		}
 	}
 
 	template<typename K, typename V>
-	std::unordered_map<K, V> DictionarySerializer::deserialize(ByteReader& reader,
-		DeserializeFunc<K> keyDeserializer,
-		DeserializeFunc<V> valueDeserializer)
+	inline std::unordered_map<K, V> DictionarySerializer::deserialize(ByteReader& reader,
+		V(*keyDeserializer)(ByteReader&),
+		V(*valueDeserializer)(ByteReader&))
 	{
 		auto type = static_cast<DataType>(reader.readByte());
 
 		if (type != DataType::Dictionary)
-			throw std::runtime_error("Type mismatch: expected Dictionary");
+			throw std::runtime_error("Type mismatch: Dictionary");
 
-		uint32_t size = static_cast<uint32_t>(reader.readInt());
+		int32_t size = reader.readInt();
 
 		std::unordered_map<K, V> result;
 		result.reserve(size);
 
-		for (uint32_t i = 0; i < size; i++)
+		for (int i = 0; i < size; i++)
 		{
 			K key = keyDeserializer(reader);
 			V value = valueDeserializer(reader);
@@ -119,4 +112,5 @@ namespace CollectionSerializer
 
 		return result;
 	}
+
 }

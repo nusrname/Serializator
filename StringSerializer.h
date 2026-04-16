@@ -2,10 +2,8 @@
 #include "NumberSerializer.h"
 #include <string>
 
-namespace StringSerializer
+namespace Serializer
 {
-	using namespace NumberSerializer;
-
 	class CharSerializer
 	{
 	public:

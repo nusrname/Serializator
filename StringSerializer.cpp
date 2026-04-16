@@ -4,10 +4,8 @@
 #include <cstdint>
 #include <string>
 
-namespace StringSerializer
+namespace Serializer
 {
-	using namespace NumberSerializer;
-
 	void CharSerializer::serialize(ByteWriter& writer, char value)
 	{
 		writer.writeByte(static_cast<byte>(DataType::Char));
@@ -47,12 +45,8 @@ namespace StringSerializer
 		if (!reader.hasMore(size))
 			throw std::runtime_error("Corrupted string size");
 
-		std::string result;
-		result.resize(size);
+		const byte* ptr = reader.readBytes(size);
 
-		for (uint32_t i = 0; i < size; i++)
-			result[i] = static_cast<char>(reader.readByte());
-
-		return result;
+		return std::string(reinterpret_cast<const char*>(ptr), size);
 	}
 }

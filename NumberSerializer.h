@@ -3,24 +3,26 @@
 #include <vector>
 #include <string>
 
-using byte = uint8_t;
-enum class DataType : uint8_t
+namespace Serializer
 {
-	Null		= 0x00,
-	Bool		= 0x01,
-	Int			= 0x02,
-	Float		= 0x03,
+	using byte = uint8_t;
+	enum class DataType : uint8_t
+	{
+		Null = 0x00,
+		Bool = 0x01,
+		Int = 0x02,
+		Float = 0x03,
 
-	Char		= 0x04,
-	String		= 0x05,
+		Char = 0x04,
+		String = 0x05,
 
-	Array		= 0x10,
-	List		= 0x11,
-	Dictionary	= 0x12
-};
+		Array = 0x10,
+		List = 0x11,
+		Dictionary = 0x12,
 
-namespace NumberSerializer
-{
+		Object = 0x20
+	};
+
 	void SaveToFile(const std::vector<byte>& data, const std::string& filename, bool compress = true);
 	std::vector<byte> LoadFromFile(const std::string& filename);
 	uint32_t crc32(const uint8_t* data, size_t length);
@@ -56,6 +58,7 @@ namespace NumberSerializer
 		bool hasMore(size_t count = 1) const;
 
 		byte readByte();
+		const byte* readBytes(size_t count);
 		int32_t readInt();
 		float readFloat();
 

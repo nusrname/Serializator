@@ -127,11 +127,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="CollectionSerializer.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="NumberSerializer.cpp" />
     <ClCompile Include="StringSerializer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CollectionSerializer.h" />
     <ClInclude Include="NumberSerializer.h" />
     <ClInclude Include="StringSerializer.h" />
   </ItemGroup>

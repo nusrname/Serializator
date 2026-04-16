@@ -8,7 +8,7 @@
 #include <string>
 
 
-namespace NumberSerializer 
+namespace Serializer 
 {
 #pragma region ByteWriter
 
@@ -69,6 +69,16 @@ namespace NumberSerializer
 			throw std::runtime_error("Out of bounds read (byte)");
 
 		return data[pos++];
+	}
+
+	const byte* ByteReader::readBytes(size_t count)
+	{
+		if (!hasMore(count))
+			throw std::runtime_error("Out of bounds");
+
+		const byte* ptr = &data[pos];
+		pos += count;
+		return ptr;
 	}
 
 	int32_t ByteReader::readInt()
