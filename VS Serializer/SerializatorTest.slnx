@@ -1,0 +1,7 @@
+<Solution>
+  <Configurations>
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Project Path="SerializatorTest.vcxproj" Id="b48537ed-f6c0-4ca3-af61-87969fdabcf1" />
+</Solution>

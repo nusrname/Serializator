@@ -1,0 +1,276 @@
+У тебя уже есть хорошая база централизованная точка сохранения (`SaveSystem`). Для курсовой тебе не нужно ломать архитектуру — нужно ввести слой абстракции и измерений.
+
+---
+
+# 🔴 Главная ошибка, которую важно избежать
+
+Сравнивать «JSON vs бинарь» напрямую на текущем коде — некорректно, потому что
+
+ у тебя сейчас разные пайплайны
+ разные аллокации
+ разный объём данных (например, JSON pretty print)
+
+👉 результат будет шумным и неубедительным
+
+---
+
+# ✅ ПРАВИЛЬНАЯ СХЕМА ЭКСПЕРИМЕНТА
+
+## 1. Ввести интерфейс сериализации
+
+```csharp
+public interface ISaveSerializer
+{
+    byte[] Serialize(GameSaveData data);
+    GameSaveData Deserialize(byte[] data);
+}
+```
+
+---
+
+## 2. Реализации
+
+### ✔ JSON (baseline)
+
+```csharp
+public class JsonSerializerImpl  ISaveSerializer
+{
+    public byte[] Serialize(GameSaveData data)
+    {
+        string json = JsonUtility.ToJson(data, false);  ВАЖНО без pretty
+        return System.Text.Encoding.UTF8.GetBytes(json);
+    }
+
+    public GameSaveData Deserialize(byte[] data)
+    {
+        string json = System.Text.Encoding.UTF8.GetString(data);
+        return JsonUtility.FromJsonGameSaveData(json);
+    }
+}
+```
+
+---
+
+### ✔ Твоя C++ DLL
+
+```csharp
+public class CustomBinarySerializer  ISaveSerializer
+{
+    public byte[] Serialize(GameSaveData data)
+    {
+         1. преобразовать GameSaveData → примитивы  DTO
+         2. передать в DLL
+         3. получить byte[]
+        return NativeSerializer.Serialize(data);
+    }
+
+    public GameSaveData Deserialize(byte[] data)
+    {
+        return NativeSerializer.Deserialize(data);
+    }
+}
+```
+
+---
+
+### ✔ Дополнительно (очень желательно)
+
+ `BinaryFormatter` (устаревший, но для сравнения)
+ `System.Text.Json`
+ (если хочешь уровень выше) — MessagePack  protobuf
+
+---
+
+# 📊 3. ЧТО ИМЕННО ИЗМЕРЯТЬ
+
+Минимальный набор
+
+### ✔ 1. Время сериализации
+
+```csharp
+var sw = Stopwatch.StartNew();
+var bytes = serializer.Serialize(data);
+sw.Stop();
+```
+
+---
+
+### ✔ 2. Время десериализации
+
+---
+
+### ✔ 3. Размер данных
+
+```csharp
+bytes.Length
+```
+
+---
+
+### ✔ 4. Память (опционально, но сильно усиливает работу)
+
+```csharp
+long before = GC.GetTotalMemory(true);
+ serialize
+long after = GC.GetTotalMemory(true);
+```
+
+---
+
+# 🧪 4. КАК ПРОВОДИТЬ ТЕСТ
+
+## ✔ Сделай отдельный класс
+
+```csharp
+public static class SaveBenchmark
+{
+    public static void Run(ISaveSerializer serializer, string name)
+    {
+        var data = SaveSystem.SaveData;
+
+        var sw = Stopwatch.StartNew();
+        var bytes = serializer.Serialize(data);
+        sw.Stop();
+
+        long serializeTime = sw.ElapsedMilliseconds;
+        int size = bytes.Length;
+
+        sw.Restart();
+        var loaded = serializer.Deserialize(bytes);
+        sw.Stop();
+
+        long deserializeTime = sw.ElapsedMilliseconds;
+
+        Debug.Log($[{name}] Size {size} bytes  Save {serializeTime} ms  Load {deserializeTime} ms);
+    }
+}
+```
+
+---
+
+## ✔ Запуск
+
+```csharp
+SaveBenchmark.Run(new JsonSerializerImpl(), JSON);
+SaveBenchmark.Run(new CustomBinarySerializer(), Custom Binary);
+```
+
+---
+
+# ⚠ КРИТИЧЕСКИЕ УСЛОВИЯ ЭКСПЕРИМЕНТА
+
+## 1. ❗ Один и тот же SaveData
+
+НЕ пересобирать между тестами
+
+---
+
+## 2. ❗ Отключить pretty JSON
+
+```csharp
+ToJson(data, false)
+```
+
+---
+
+## 3. ❗ Прогрев (warm-up)
+
+Первый запуск игнорируй
+
+```csharp
+serializer.Serialize(data);  прогрев
+```
+
+---
+
+## 4. ❗ Несколько прогонов
+
+```csharp
+for (int i = 0; i  10; i++)
+```
+
+и усреднение
+
+---
+
+# 📈 ЧТО ТЫ ПОЛУЧИШЬ
+
+Таблицу вида
+
+ Метод          Размер  Сохранение  Загрузка 
+ -------------  ------  ----------  -------- 
+ JSON           66 KB   5 ms        4 ms     
+ Binary (твой)  18 KB   2 ms        2 ms     
+ ...            ...     ...         ...      
+
+---
+
+# 🧠 ВАЖНЫЙ ВЫВОД (для курсовой)
+
+Ты должен показать
+
+1. Компромисс
+
+    JSON → читаемость
+    Binary → производительность
+
+2. Практическую применимость
+
+    выигрыш при росте данных
+    влияние на загрузку игры
+
+3. Ограничения
+
+    сложность поддержки бинарного формата
+    зависимость от версии
+
+---
+
+# 🚀 Как усилить работу (очень рекомендую)
+
+Добавь
+
+## ✔ тест на масштабирование
+
+```csharp
+ 1k, 10k, 100k зданий
+```
+
+👉 покажет экспоненциальный рост
+
+---
+
+## ✔ тест на частичную загрузку
+
+JSON
+
+ нельзя легко читать кусок
+
+Binary
+
+ можно (если спроектировать)
+
+---
+
+# 📌 Итог
+
+Тебе не нужно переписывать SaveSystem.
+
+Тебе нужно
+
+✔ ввести интерфейс сериализации
+✔ сделать несколько реализаций
+✔ замерять
+
+ время
+ размер
+ память
+
+✔ провести серию тестов с одинаковыми данными
+
+---
+
+Если хочешь, дальше могу
+
+ предложить структуру главы “Экспериментальная часть” (готовый текст для курсовой)
+ или помочь адаптировать твою DLL под C# (interop без боли)
