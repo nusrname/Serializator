@@ -1,11 +1,17 @@
 ﻿#pragma once
 #include "CollectionSerializer.h"
 #include <stdexcept>
+#include <algorithm>
+#include <cstdint>
+#include <unordered_map>
+#include <utility>
+#include <vector>
+#include "NumberSerializer.h"
 
 namespace Serializer
 {
 	template<typename T>
-	inline void ArraySerializer::serialize(ByteWriter& writer,
+	void ArraySerializer::serialize(ByteWriter& writer,
 		const std::vector<T>& data,
 		SerializeFunc<T> serializer)
 	{
@@ -18,7 +24,7 @@ namespace Serializer
 	}
 
 	template<typename T>
-	inline std::vector<T> ArraySerializer::deserialize(ByteReader& reader,
+	std::vector<T> ArraySerializer::deserialize(ByteReader& reader,
 		DeserializeFunc<T> deserializer)
 	{
 		auto type = static_cast<DataType>(reader.readByte());
@@ -38,7 +44,7 @@ namespace Serializer
 	}
 
 	template<typename T>
-	inline void ListSerializer::serialize(ByteWriter& writer,
+	void ListSerializer::serialize(ByteWriter& writer,
 		const std::vector<T>& data,
 		SerializeFunc<T> serializer)
 	{
@@ -51,7 +57,7 @@ namespace Serializer
 	}
 
 	template<typename T>
-	inline std::vector<T> ListSerializer::deserialize(ByteReader& reader,
+	std::vector<T> ListSerializer::deserialize(ByteReader& reader,
 		DeserializeFunc<T> deserializer)
 	{
 		auto type = static_cast<DataType>(reader.readByte());
@@ -71,13 +77,12 @@ namespace Serializer
 	}
 
 	template<typename K, typename V>
-	inline void DictionarySerializer::serialize(ByteWriter& writer,
+	void DictionarySerializer::serialize(ByteWriter& writer,
 		const std::unordered_map<K, V>& dict,
-		void(*keySerializer)(ByteWriter&, const K&),
-		void(*valueSerializer)(ByteWriter&, const V&))
+		SerializeFunc<K> keySerializer,
+		SerializeFunc<V> valueSerializer)
 	{
 		writer.writeByte(static_cast<byte>(DataType::Dictionary));
-
 		writer.writeInt(static_cast<int32_t>(dict.size()));
 
 		for (const auto& [k, v] : dict)
@@ -88,29 +93,28 @@ namespace Serializer
 	}
 
 	template<typename K, typename V>
-	inline std::unordered_map<K, V> DictionarySerializer::deserialize(ByteReader& reader,
-		V(*keyDeserializer)(ByteReader&),
-		V(*valueDeserializer)(ByteReader&))
+	std::unordered_map<K, V> DictionarySerializer::deserialize(ByteReader& reader,
+		DeserializeFunc<K> keyDeserializer,
+		DeserializeFunc<V> valueDeserializer)
 	{
-		auto type = static_cast<DataType>(reader.readByte());
-
+		const auto type = static_cast<DataType>(reader.readByte());
 		if (type != DataType::Dictionary)
-			throw std::runtime_error("Type mismatch: Dictionary");
+			throw std::runtime_error("Type mismatch: expected Dictionary");
 
-		int32_t size = reader.readInt();
+		const int32_t size = reader.readInt();
+		if (size < 0)
+			throw std::runtime_error("Corrupted Dictionary size");
 
 		std::unordered_map<K, V> result;
-		result.reserve(size);
+		result.reserve(static_cast<size_t>(size));
 
-		for (int i = 0; i < size; i++)
+		for (int32_t i = 0; i < size; ++i)
 		{
 			K key = keyDeserializer(reader);
 			V value = valueDeserializer(reader);
-
-			result.emplace(key, value);
+			result.emplace(std::move(key), std::move(value));
 		}
 
 		return result;
 	}
-
 }

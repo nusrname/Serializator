@@ -1,11 +1,12 @@
 ﻿#pragma once
 #include <unordered_map>
+#include <vector>
 #include "NumberSerializer.h"
 
 namespace Serializer
 {
 	template<typename T>
-	using SerializeFunc = void(*)(ByteWriter&, const T&);
+	using SerializeFunc = void(*)(ByteWriter&, T);
 
 	template<typename T>
 	using DeserializeFunc = T(*)(ByteReader&);
@@ -42,12 +43,14 @@ namespace Serializer
 		template<typename K, typename V>
 		static void serialize(ByteWriter& writer,
 			const std::unordered_map<K, V>& dict,
-			void(*keySerializer)(ByteWriter&, const K&),
-			void(*valueSerializer)(ByteWriter&, const V&));
+			SerializeFunc<K> keySerializer,
+			SerializeFunc<V> valueSerializer);
 
 		template<typename K, typename V>
 		static std::unordered_map<K, V> deserialize(ByteReader& reader,
-			V(*keyDeserializer)(ByteReader&),
-			V(*valueDeserializer)(ByteReader&));
+			DeserializeFunc<K> keyDeserializer,
+			DeserializeFunc<V> valueDeserializer);
 	};
 }
+
+#include "CollectionSerializer.cpp"
