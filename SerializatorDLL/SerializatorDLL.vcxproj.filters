@@ -44,10 +44,13 @@
     <ClCompile Include="SerializerAPI.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="CollectionSerializer.cpp">
+    <ClCompile Include="NumberSerializer.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="NumberSerializer.cpp">
+    <ClCompile Include="StringSerializer.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="CollectionSerializer.inl">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
   </ItemGroup>

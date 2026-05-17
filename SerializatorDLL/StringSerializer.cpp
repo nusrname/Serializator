@@ -1,4 +1,5 @@
-﻿#include "StringSerializer.h"
+﻿#include "pch.h"
+#include "StringSerializer.h"
 #include "NumberSerializer.h"
 #include <stdexcept>
 #include <cstdint>

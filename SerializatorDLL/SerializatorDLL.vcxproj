@@ -139,7 +139,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="CollectionSerializer.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="NumberSerializer.h" />
     <ClInclude Include="pch.h" />
@@ -147,7 +146,6 @@
     <ClInclude Include="StringSerializer.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="CollectionSerializer.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="NumberSerializer.cpp" />
     <ClCompile Include="pch.cpp">
@@ -157,6 +155,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="SerializerAPI.cpp" />
+    <ClCompile Include="StringSerializer.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

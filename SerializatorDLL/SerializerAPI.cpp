@@ -1,6 +1,7 @@
 ﻿#include "pch.h"
 #include "SerializerAPI.h"
 #include "NumberSerializer.h"
+#include "CollectionSerializer.h"
 #include <vector>
 #include <cstring>
 
@@ -13,18 +14,29 @@ extern "C"
         int inputSize,
         int* outputSize)
     {
-        std::vector<byte> data(input, input + inputSize);
+        // интерпретируем вход как int32 массив
+        const int32_t* ints =
+            reinterpret_cast<const int32_t*>(input);
+
+        int count = inputSize / sizeof(int32_t);
+
+        std::vector<int32_t> data(ints, ints + count);
 
         ByteWriter writer;
 
-        // Пример: просто копируем (дальше вставишь свою логику)
-        writer.writeBytes(data.data(), data.size());
+        ArraySerializer::serialize<int32_t>(
+            writer,
+            data,
+            IntSerializer::serialize
+        );
 
         const auto& buffer = writer.getBuffer();
 
         *outputSize = static_cast<int>(buffer.size());
 
-        unsigned char* result = new unsigned char[*outputSize];
+        unsigned char* result =
+            new unsigned char[*outputSize];
+
         std::memcpy(result, buffer.data(), *outputSize);
 
         return result;
@@ -35,21 +47,32 @@ extern "C"
         int inputSize,
         int* outputSize)
     {
+        if (!input || inputSize <= 0)
+        {
+            *outputSize = 0;
+            return nullptr;
+        }
+
         std::vector<byte> data(input, input + inputSize);
 
         ByteReader reader(data);
 
-        std::vector<byte> resultData;
+        ByteWriter writer;
 
-        while (reader.hasMore())
+        while (reader.hasMore(1))
         {
-            resultData.push_back(reader.readByte());
+            byte b = reader.readByte();
+            writer.writeByte(b);
         }
 
-        *outputSize = static_cast<int>(resultData.size());
+        const auto& buffer = writer.getBuffer();
+
+        *outputSize = static_cast<int>(buffer.size());
 
         unsigned char* result = new unsigned char[*outputSize];
-        std::memcpy(result, resultData.data(), *outputSize);
+
+        if (*outputSize > 0)
+            std::memcpy(result, buffer.data(), *outputSize);
 
         return result;
     }
