@@ -1,4 +1,5 @@
-﻿#include "SerializerAPI.h"
+﻿#include "pch.h"
+#include "SerializerAPI.h"
 #include "NumberSerializer.h"
 #include <vector>
 #include <cstring>

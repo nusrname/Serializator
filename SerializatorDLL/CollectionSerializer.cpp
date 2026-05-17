@@ -1,4 +1,5 @@
 ﻿#pragma once
+#include "pch.h"
 #include "CollectionSerializer.h"
 #include <stdexcept>
 #include <algorithm>

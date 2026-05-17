@@ -1,0 +1,279 @@
+% Пример оформления библиографии для ugost2003
+
+% Книга
+% Необходимые поля:
+% - Название (title)
+% - Автор(ы) (author, разделяются c помощью "and")
+% - Город издательства (address)
+% - Наименование издательства (publisher)
+% - Год издания (year)
+% - Общее кол-во страниц (numpages, опционально, либо везде ставить, либо нет)
+% Пример оформления русской книги
+@book{henrick2017ml,
+  title      = {Машинное обучение},
+  author     = {Хенрик, Б. and Джозеф, Р. and Марк, Ф.},
+  publisher  = {Издательский дом Питер},
+  address    = {Санкт"=Петербург},
+  year       = {2017},
+  language   = {russian}  
+}
+
+% Пример оформления английской книги
+@book{human_earing,
+  title     = {Auditory Neuroscience: Making sense of sound},
+  author    = {Schnupp, Jan and Nelken, Israel--Junior and King, Andrew},
+  publisher = {MIT press},
+  address   = {New York},
+  year      = {2011},
+}
+
+
+% Статья
+% Необходимые поля:
+% - Название статьи (title)
+% - Автор(ы) (author, разделяются c помощью "and")
+% - Название журнала (journal)
+% - Идентификационные данные (хотя бы одно из):
+%   - Том (volume)
+%   - Номер (number)
+%   - Выпуск
+% - Год издания (year)
+% - Страницы (диапазон в журнале) (pages)
+%     Замеч.: страницы всегда оформляются интервалом даже если статья на одну страницу
+
+% Пример оформления статьи на английском языке
+@article{attention,
+  title    = {Attention is all you need},
+  author   = {Vaswani, Ashish and Shazeer, Noam and Parmar, Niki and Uszkoreit, Jakob and Jones, Llion and Gomez, Aidan N and Kaiser, {\L}ukasz and Polosukhin, Illia},
+  journal  = {Advances in neural information processing systems},
+  volume   = {30},
+  number   = {2},
+  pages    = {14--14},
+  year     = {2017}
+}
+
+% Пример оформления статьи на русском языке
+@article{classification_sound,
+  title        = {Классификация музыкальных композиций по исполнителям на основе машинного обучения},
+  author       = {Н. С. Лысенко and Т. А. Приходько},
+  journal      = {Прикладная математика: современные проблемы математики, информатики и моделирования},
+  volume       = {2},
+  pages        = {121--227},
+  year         = {2020},
+  language     = {russian}
+}
+
+% Электронный ресурс
+% Необходимые поля:
+% - URL (url)
+% - Заголовок с экрана (title)
+% - Дата обращения (urldate, не позднее официальной даты сдачи работы)
+% - Язык заголовка с экрана (note)
+% Для электронных ресурсов лучше оставлять language = {russian}
+% вне зависимости от реального языка источника
+
+% Пример оформления электронного источника на английском языке
+@online{docker-docs,
+  title={Docker Docs},
+  url = {https://docs.docker.com/},
+  urldate = {27.05.2023},
+  note = {Загл. с экр. Яз. англ.},
+  language = {russian}
+}
+
+% Пример оформления электронного источника на русском языке
+@online{fkn,
+  title = {Курс <<Машинное обучение>> на ФКН ВШЭ},
+  url = {https://github.com/esokolov/ml-course-hse},
+  urldate = {25.05.2024},
+  note = {Загл. с экр. Яз. рус.},
+  language = {russian}
+}
+
+
+%---------------------------------------------------------------------------------
+
+@book{kleppmann2017designing,
+  title      = {Designing Data-Intensive Applications},
+  author     = {Kleppmann, Martin},
+  publisher  = {O'Reilly Media},
+  address    = {Sebastopol},
+  year       = {2017}
+}
+
+@book{soukup1994serialization,
+  title      = {Serialization and Persistent Objects},
+  author     = {Soukup, Jiri and Machacek, Pavel},
+  publisher  = {Springer Berlin Heidelberg},
+  address    = {New York},
+  year       = {2014}
+}
+
+
+@book{sommerville2016software,
+  title      = {Инженерия программного обеспечения},
+  author     = {Соммервилл, Иан},
+  publisher  = {Вильямс},
+  address    = {Москва},
+  year       = {2002},
+  language   = {russian}
+}
+
+@book{silberschatz2020database,
+  title      = {Database System Concepts},
+  author     = {Silberschatz, Abraham and Korth, Henry and Sudarshan, S.},
+  publisher  = {McGraw-Hill},
+  address    = {New York},
+  year       = {2020}
+}
+
+@book{ramakrishnan2003database,
+title = {Database Management Systems},
+author = {Ramakrishnan, Raghu and Gehrke, Johannes},
+publisher = {McGraw-Hill},
+address = {New York},
+year = {2002}
+}
+
+@book{tanenbaum2015modern,
+title = {Современные операционные системы},
+author = {Таненбаум, Эндрю and Бос, Герберт},
+publisher = {Питер},
+address = {Санкт"=Петербург},
+year = {2019},
+language = {russian}
+}
+
+@book{stevens2013advanced,
+title = {Advanced Programming in the UNIX Environment},
+author = {Stevens, W. Richard and Rago, Stephen},
+publisher = {Addison-Wesley},
+address = {Boston},
+year = {2013}
+}
+
+
+@book{stroustrup2013cpp,
+title = {Язык программирования C++},
+author = {Страуструп, Бьерн},
+publisher = {БХВ"=Петербург},
+address = {Санкт"=Петербург},
+year = {2022},
+language = {russian}
+}
+
+@book{meyers2005effective,
+title = {Effective C++},
+author = {Meyers, Scott},
+publisher = {Addison-Wesley},
+address = {Boston},
+year = {2005}
+}
+
+@book{jain1991art,
+title = {The Art of Computer Systems Performance Analysis},
+author = {Jain, Raj},
+publisher = {Wiley},
+address = {New York},
+year = {1991}
+}
+
+
+@book{gregg2013systems,
+title = {Systems Performance},
+author = {Gregg, Brendan},
+publisher = {Prentice Hall},
+address = {Boston},
+year = {2013}
+}
+
+@online{rfc8259,
+title = {The JavaScript Object Notation (JSON) Data Interchange Format},
+url = {https://www.rfc-editor.org/info/rfc8259},
+urldate = {26.04.2026},
+note = {Загл. с экр. Яз. англ.},
+language = {russian}
+}
+
+@online{xmlspec,
+title = {Extensible Markup Language (XML) 1.0},
+url = {https://www.w3.org/TR/xml/},
+urldate = {26.04.2026},
+note = {Загл. с экр. Яз. англ.},
+language = {russian}
+}
+
+@online{yamlspec,
+title = {YAML Ain't Markup Language Version 1.2},
+url = {https://yaml.org/spec/1.2/},
+urldate = {26.04.2026},
+note = {Загл. с экр. Яз. англ.},
+language = {russian}
+}
+
+@online{protobuf,
+title = {Protocol Buffers Documentation},
+url = {https://protobuf.dev/},
+urldate = {26.04.2026},
+note = {Загл. с экр. Яз. англ.},
+language = {russian}
+}
+
+@online{avro,
+title = {Apache Avro Specification},
+url = {https://avro.apache.org/docs/},
+urldate = {26.04.2026},
+note = {Загл. с экр. Яз. англ.},
+language = {russian}
+}
+
+
+@book{evans2003domain,
+title = {Domain-Driven Design: Tackling Complexity in the Heart of Software},
+author = {Evans, Eric},
+publisher = {Addison-Wesley},
+address = {Boston},
+year = {2003}
+}
+
+@book{salomon2007data,
+title = {Data Compression: The Complete Reference},
+author = {Salomon, David},
+publisher = {Springer},
+address = {New York},
+year = {2004}
+}
+
+@book{sayood2017introduction,
+title = {Introduction to Data Compression},
+author = {Sayood, Khalid},
+publisher = {Morgan Kaufmann},
+address = {Burlington},
+year = {2017}
+}
+
+@book{mackay2003information,
+title = {Information Theory, Inference and Learning Algorithms},
+author = {MacKay, David},
+publisher = {Cambridge University Press},
+address = {Cambridge},
+year = {2003}
+}
+
+@article{georges2007statistically,
+title = {Statistically Rigorous Java Performance Evaluation},
+author = {Georges, Andy and Buytaert, Dries and Eeckhout, Lieven},
+journal = {ACM SIGPLAN Notices},
+volume = {42},
+number = {10},
+pages = {57--76},
+year = {2007}
+}
+
+@book{martin2017clean,
+title = {Clean Architecture: A Craftsman's Guide to Software Structure and Design},
+author = {Martin, Robert C.},
+publisher = {Prentice Hall},
+address = {Boston},
+year = {2017}
+}

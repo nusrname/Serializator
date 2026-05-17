@@ -1,4 +1,5 @@
 ﻿#pragma once
+#include "pch.h"
 #include "NumberSerializer.h"
 #include <cstdint>
 #include <stdexcept>

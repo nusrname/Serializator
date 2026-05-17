@@ -3,5 +3,7 @@
     <Platform Name="x64" />
     <Platform Name="x86" />
   </Configurations>
-  <Project Path="SerializatorDLL.vcxproj" />
+  <Project Path="SerializatorDLL.vcxproj" Id="15c408e5-acb0-4a95-8596-063dfcc268cf">
+    <BuildType Solution="Debug|x64" Project="Release" />
+  </Project>
 </Solution>

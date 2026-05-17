@@ -1,6 +1,7 @@
 ﻿#pragma once
 #include <unordered_map>
 #include <vector>
+#include <list>
 #include "NumberSerializer.h"
 
 namespace Serializer
@@ -53,4 +54,4 @@ namespace Serializer
 	};
 }
 
-#include "CollectionSerializer.cpp"
+//#include "CollectionSerializer.inl"
